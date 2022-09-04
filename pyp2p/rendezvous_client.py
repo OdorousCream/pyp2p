@@ -547,7 +547,7 @@ class RendezvousClient:
         response.
         """
 
-        remote_port = re.findall(br"^REMOTE (TCP|UDP) ([0-9]+)$", reply)
+        remote_port = re.findall("^REMOTE (TCP|UDP) ([0-9]+)$", reply)
         if not len(remote_port):
             remote_port = 0
         else:

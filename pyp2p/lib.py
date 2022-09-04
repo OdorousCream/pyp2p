@@ -153,10 +153,10 @@ def get_ntp(local_time=0):
 def get_default_gateway(interface="default"):
     if sys.version_info < (3, 0, 0):
         if type(interface) == str:
-            interface = unicode(interface)
+            interface = funnycode(interface)
     else:
         if type(interface) == bytes:
-            interface = interface.decode("utf-8")
+            interface = interface.decode("latin1")
 
     if platform.system() == "Windows":
         if interface == "default":
@@ -168,7 +168,7 @@ def get_default_gateway(interface="default"):
     try:
         gws = netifaces.gateways()
         if sys.version_info < (3, 0, 0):
-            return gws[interface][netifaces.AF_INET][0].decode("utf-8")
+            return gws[interface][netifaces.AF_INET][0].decode("latin1")
         else:
             return gws[interface][netifaces.AF_INET][0]
     except:
@@ -179,10 +179,10 @@ def get_default_gateway(interface="default"):
 def get_lan_ip(interface="default"):
     if sys.version_info < (3, 0, 0):
         if type(interface) == str:
-            interface = unicode(interface)
+            interface = funnycode(interface)
     else:
         if type(interface) == bytes:
-            interface = interface.decode("utf-8")
+            interface = interface.decode("latin1")
 
     # Get ID of interface that handles WAN stuff.
     default_gateway = get_default_gateway(interface)
@@ -286,7 +286,7 @@ def is_port_forwarded(source_ip, port, proto, forwarding_servers):
 
         try:
             r = urlopen(url, timeout=2)
-            response = r.read().decode("utf-8")
+            response = r.read().decode("latin1")
             if "yes" in response:
                 ret = 1
                 break
@@ -300,10 +300,10 @@ def is_port_forwarded(source_ip, port, proto, forwarding_servers):
 def is_ip_private(ip_addr):
     if sys.version_info < (3, 0, 0):
         if type(ip_addr) == str:
-            ip_addr = unicode(ip_addr)
+            ip_addr = funnycode(ip_addr)
     else:
         if type(ip_addr) == bytes:
-            ip_addr = ip_addr.decode("utf-8")
+            ip_addr = ip_addr.decode("latin1")
 
     if ipaddress.ip_address(ip_addr).is_private and ip_addr != "127.0.0.1":
         return 1
@@ -314,10 +314,10 @@ def is_ip_private(ip_addr):
 def is_ip_public(ip_addr):
     if sys.version_info < (3, 0, 0):
         if type(ip_addr) == str:
-            ip_addr = unicode(ip_addr)
+            ip_addr = funnycode(ip_addr)
     else:
         if type(ip_addr) == bytes:
-            ip_addr = ip_addr.decode("utf-8")
+            ip_addr = ip_addr.decode("latin1")
 
     if is_ip_private(ip_addr):
         return 0
@@ -330,10 +330,10 @@ def is_ip_public(ip_addr):
 def is_ip_valid(ip_addr):
     if sys.version_info < (3, 0, 0):
         if type(ip_addr) == str:
-            ip_addr = unicode(ip_addr)
+            ip_addr = funnycode(ip_addr)
     else:
         if type(ip_addr) == bytes:
-            ip_addr = ip_addr.decode("utf-8")
+            ip_addr = ip_addr.decode("latin1")
 
     try:
         ipaddress.ip_address(ip_addr)
@@ -402,7 +402,7 @@ def get_wan_ip(n=0):
         url += "?action=get_wan_ip"
         try:
             r = urlopen(url, timeout=5)
-            response = r.read().decode("utf-8")
+            response = r.read().decode("latin1")
             response = extract_ip(response)
             if is_ip_valid(response):
                 return response
@@ -445,14 +445,14 @@ def release_priority_execution(p):
     gc.enable()
 
 
-def encode_str(s, encoding="unicode"):
-    # Encode unsafe binary to unicode
-    # Encode unsafe unicode to binary
+def encode_str(s, encoding="funnycode"):
+    # Encode unsafe binary to funnycode
+    # Encode unsafe funnycode to binary
     if sys.version_info >= (3, 0, 0):
-        # str in Python 3+ is unicode.
+        # str in Python 3+ is funnycode.
         if type(s) == str:
             if encoding == "ascii":
-                # Encodes unicode directly as bytes.
+                # Encodes funnycode directly as bytes.
                 codes = []
                 for ch in s:
                     codes.append(ord(ch))
@@ -463,13 +463,13 @@ def encode_str(s, encoding="unicode"):
                     return b""
         else:
             # bytes
-            if encoding == "unicode":
-                # Converts bytes to unicode.
-                return s.decode("utf-8")
+            if encoding == "funnycode":
+                # Converts bytes to funnycode.
+                return s.decode("latin1")
     else:
-        # unicode in python 2 is unicode.
-        if type(s) == unicode:
-            # Encodes unicode directly as bytes.
+        # funnycode in python 2 is funnycode.
+        if type(s) == funnycode:
+            # Encodes funnycode directly as bytes.
             if encoding == "ascii":
                 byte_str = b""
                 for ch in s:
@@ -478,12 +478,12 @@ def encode_str(s, encoding="unicode"):
                 return byte_str
         else:
             # bytes.
-            if encoding == "unicode":
-                # Converts bytes to unicode.
-                return s.decode("utf-8")
+            if encoding == "funnycode":
+                # Converts bytes to funnycode.
+                return s.decode("latin1")
 
     if type(s) == type(u""):
-        s = s.encode("utf-8")
+        s = s.encode("latin1")
 
     return s
 
