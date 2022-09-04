@@ -42,7 +42,7 @@ sim_open_interval = 2
 # Bootstrapping + TCP hole punching server.
 rendezvous_servers = [
     {
-        "addr": "162.243.213.95",
+        "addr": "192.168.122.38",
         "port": 8000
     }
 ]
@@ -69,7 +69,7 @@ log = logging.getLogger(__name__)
 
 def is_msg_old(msg, record_seen=0):
     if type(msg) == str:
-        msg = msg.encode("latin1")
+        msg = msg.encode("ascii")
 
     response_hash = hashlib.sha256(msg).hexdigest()
     if response_hash in seen_messages:
@@ -89,7 +89,7 @@ def is_msg_old(msg, record_seen=0):
 
 def record_msg_hash(msg):
     if type(msg) == str:
-        msg = msg.encode("latin1")
+        msg = msg.encode("ascii")
     response_hash = hashlib.sha256(msg).hexdigest()
 
     if not is_msg_old(msg):
@@ -864,10 +864,10 @@ class Net:
         # Convert WAN IPs to bytes.
         if sys.version_info >= (3, 0, 0):
             if type(their_wan_ip) == str:
-                their_wan_ip = their_wan_ip.encode("latin1")
+                their_wan_ip = their_wan_ip.encode("ascii")
 
                 if type(our_wan_ip) == str:
-                    our_wan_ip = our_wan_ip.encode("latin1")
+                    our_wan_ip = our_wan_ip.encode("ascii")
         else:
             if type(their_wan_ip) == unicode:
                 their_wan_ip = str(their_wan_ip)
@@ -876,8 +876,8 @@ class Net:
                 our_wan_ip = str(our_wan_ip)
 
         # Hash WAN IPs to make them the same length.
-        their_wan_ip = hashlib.sha256(their_wan_ip).hexdigest().encode("latin1")
-        our_wan_ip = hashlib.sha256(our_wan_ip).hexdigest().encode("latin1")
+        their_wan_ip = hashlib.sha256(their_wan_ip).hexdigest().encode("ascii")
+        our_wan_ip = hashlib.sha256(our_wan_ip).hexdigest().encode("ascii")
 
         # Derive fingerprint.
         int_their_wan_ip = int(their_wan_ip, 16)
@@ -887,12 +887,12 @@ class Net:
         else:
             # If both are the same the order doesn't matter.
             fingerprint = hashlib.sha256(their_wan_ip + our_wan_ip)
-        fingerprint = fingerprint.hexdigest().encode("latin1")
+        fingerprint = fingerprint.hexdigest().encode("ascii")
 
         # Convert nonce to bytes.
         if sys.version_info >= (3, 0, 0):
             if type(nonce) == str:
-                nonce = nonce.encode("latin1")
+                nonce = nonce.encode("ascii")
         else:
             if type(nonce) == unicode:
                 nonce = str(nonce)
