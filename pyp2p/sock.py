@@ -218,7 +218,7 @@ class Sock:
         self.s = None
 
 
-    def parse_buf(self, encoding="unicode"):
+    def parse_buf(self, encoding="funnycode"):
         """
         Since TCP is a stream-orientated protocol, responses aren't guaranteed
         to be complete when they arrive. The buffer stores all the data and
@@ -245,7 +245,7 @@ class Sock:
 
                     # Append new reply.
                     if reply != b"":
-                        if encoding == "unicode":
+                        if encoding == "funnycode":
                             replies.append(encode_str(reply, encoding))
                         else:
                             replies.append(reply)
@@ -267,7 +267,7 @@ class Sock:
         return replies
 
     # Blocking or non-blocking.
-    def get_chunks(self, fixed_limit=None, encoding="unicode"):
+    def get_chunks(self, fixed_limit=None, encoding="funnycode"):
         """
         This is the function which handles retrieving new data chunks. It's
         main logic is avoiding a recv call blocking forever and halting
@@ -471,7 +471,7 @@ class Sock:
             self.close()
 
     # Blocking or non-blocking.
-    def recv(self, n, encoding="unicode", timeout=5):
+    def recv(self, n, encoding="funnycode", timeout=5):
         # Sanity checking.
         assert n
 
@@ -490,7 +490,7 @@ class Sock:
             self.buf = b""
 
             # Return results.
-            if encoding == "unicode":
+            if encoding == "funnycode":
                 ret = encode_str(ret, encoding)
 
             return ret
@@ -499,7 +499,7 @@ class Sock:
             error = parse_exception(e)
             log_exception(error_log_path, error)
             self.close()
-            if encoding == "unicode":
+            if encoding == "funnycode":
                 return u""
             else:
                 return b""
